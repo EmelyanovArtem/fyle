@@ -21,13 +21,11 @@
           <v-text-field
             v-model="userRegisterData.login"
             label="Логин"
-            :rules="firstNameRules"
           ></v-text-field>
 
           <v-text-field
             v-model="userRegisterData.password"
             label="Пароль"
-            :rules="lastNameRules"
           ></v-text-field>
 
           <v-btn @click="registerUser" block class="mt-2">Зарегистрироваться</v-btn>

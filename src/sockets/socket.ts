@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 
-let socket = io(import.meta.env.BASE_URL);
+// let socket = io(import.meta.env.BASE_URL);
+let socket = io("https://api.fyle.lmrsc.su");
 console.log(socket);
 
 let geustToken: string = '';
@@ -35,7 +36,7 @@ export function register(userRegData: IUserPayload) {
   socket.emit('register', userRegData);
 }
 
-export function auth(userAuthData: IUserPayload) {
+export function auth(userAuthData: IUserPayload | string) {
   socket.on('auth', (data) => {
     console.log('авторизация прошла успешно');
     if (data.session && data.session.token) {

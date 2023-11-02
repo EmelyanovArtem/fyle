@@ -23,13 +23,12 @@
           <v-text-field
             v-model="userAuthData.login"
             label="Логин"
-            :rules="firstNameRules"
+            :rules=""
           ></v-text-field>
 
           <v-text-field
             v-model="userAuthData.password"
             label="Пароль"
-            :rules="lastNameRules"
           ></v-text-field>
 
           <v-btn @click="authUser()" type="submit" block class="mt-2">Войти</v-btn>

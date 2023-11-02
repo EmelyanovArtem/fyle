@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/',
+    path: '',
     component: () => import('@/layouts/default/Default.vue'),
     children: [
       {
@@ -16,14 +16,14 @@ const routes = [
       },
     ],
   },
-  {
-    path: '/login',
-    component: () => import('@/components/login.vue')
-  },
-  {
-    path: '/register',
-    component: () => import('@/components/register.vue')
-  }
+  // {
+  //   path: '/login',
+  //   component: () => import('@/components/login.vue')
+  // },
+  // {
+  //   path: '/register',
+  //   component: () => import('@/components/register.vue')
+  // }
 ]
 
 const router = createRouter({
