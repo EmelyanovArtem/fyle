@@ -12,7 +12,9 @@
     "sourceMap": false,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "strictNullChecks": false,
     "lib": ["esnext", "dom"],
+    "skipLibCheck": true,
     "types": [
       "node",
       "vuetify"

@@ -102,12 +102,12 @@ export default defineComponent({
   },
   created() {
     let lsGuestToken = localStorage.getItem('guestToken');
-    let lsToken = JSON.parse(localStorage.getItem('token'));
+    let lsToken = localStorage.getItem('token');
     console.log(lsToken)
 
     if (lsToken !== null) {
       console.log('1111111')
-      auth(lsToken.session.token);
+      auth(lsToken);
     } else if(lsGuestToken === null) {
       lsGuestToken = '';
       guestRegister();

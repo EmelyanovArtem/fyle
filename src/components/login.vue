@@ -32,7 +32,7 @@
             :rules="lastNameRules"
           ></v-text-field>
 
-          <v-btn @click="authUser()" block class="mt-2">Войти</v-btn>
+          <v-btn @click="authUser()" type="submit" block class="mt-2">Войти</v-btn>
         </v-form>
       </v-sheet>
 <!-- </template> -->
@@ -54,6 +54,7 @@ export default defineComponent({
       userAuthData: {
         login: '',
         password: '',
+        // token: ''
       } as IUserPayload,
     }
   },
@@ -64,6 +65,11 @@ export default defineComponent({
     authUser() {
       console.log(this.userAuthData)
       auth(this.userAuthData);
+      if (this.userAuthData.token) {
+        console.log('token est', this.userAuthData.token)
+      } else {
+        console.log('net')
+      }
     }
   }
 })
