@@ -216,7 +216,6 @@ export default defineComponent({
   created() {
     let lsGuestToken = localStorage.getItem('guestToken');
     let lsToken = localStorage.getItem('token');
-    console.log(lsToken)
 
     if (lsToken !== null) {
       console.log('1111111')

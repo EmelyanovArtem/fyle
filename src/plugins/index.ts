@@ -11,8 +11,9 @@ import router from '../router'
 
 // Types
 import type { App } from 'vue'
+import { SocketBase } from '@/services/socketService'
 
-export function registerPlugins (app: App) {
+export async function registerPlugins (app: App) {
   app
     .use(vuetify)
     .use(router)
