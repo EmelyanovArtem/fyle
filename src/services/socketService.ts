@@ -11,7 +11,7 @@ export class SocketBase {
     this.SOCKET = io(import.meta.env.VITE_BASE_URL)
   }
 
-  async api(eventName: string, data?: any) {
+  async api(eventName: string, data: any = {}) {
     const payload = data;
     payload.id = Math.floor(Math.random() * 2**32);
     return new Promise((resolve, reject) => {

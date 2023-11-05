@@ -23,7 +23,6 @@
           <v-text-field
             v-model="userAuthData.login"
             label="Логин"
-            :rules=""
           ></v-text-field>
 
           <v-text-field
@@ -44,7 +43,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { auth } from '../sockets/socket';
+// import { auth } from '../sockets/socket';
 import { IUserPayload } from '@/interfaces.dot';
 
 export default defineComponent({
@@ -63,7 +62,7 @@ export default defineComponent({
   methods: {
     authUser() {
       console.log(this.userAuthData)
-      auth(this.userAuthData);
+      // auth(this.userAuthData);
       if (this.userAuthData.token) {
         console.log('token est', this.userAuthData.token)
       } else {

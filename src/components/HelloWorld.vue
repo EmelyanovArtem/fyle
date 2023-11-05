@@ -138,7 +138,7 @@
         variant="flat"
       > Показать все файлы
       </v-btn>
-      <v-navigation-drawer width="900" class="pt-16 aside" v-model="aside" app>
+      <v-navigation-drawer width="450" class="pt-16 aside" v-model="aside" app>
         <v-btn
           @click="aside = false"
           class="mb-16"
@@ -204,7 +204,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 // import { io } from "socket.io-client";
-import {guestRegister, guestAuth, auth} from '../sockets/socket';
+// import {guestRegister, guestAuth, auth} from '../sockets/socket';
 
 export default defineComponent({
   data() {
@@ -219,14 +219,14 @@ export default defineComponent({
 
     if (lsToken !== null) {
       console.log('1111111')
-      auth(lsToken);
+      // auth(lsToken);
     } else if(lsGuestToken === null) {
       lsGuestToken = '';
-      guestRegister();
+      // guestRegister();
     }
     else {
       lsGuestToken = lsGuestToken as string;
-      guestAuth(lsGuestToken);
+      // guestAuth(lsGuestToken);
     }
   },
 })

@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { register } from '../sockets/socket';
+// import { register } from '../sockets/socket';
 import { IUserPayload } from '@/interfaces.dot';
 
 export default defineComponent({
@@ -55,7 +55,7 @@ export default defineComponent({
   },
   methods: {
     registerUser() {
-      register(this.userRegisterData);
+      // register(this.userRegisterData);
     }
   }
 })
