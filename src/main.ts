@@ -24,4 +24,4 @@ app.mount('#app')
 
 export const socket = ref(new SocketBase());
 guestRegAuth();
-autoAuth();
+// autoAuth();

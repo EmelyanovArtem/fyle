@@ -151,10 +151,10 @@
           />
         </v-btn>
         <v-row class="d-flex align-left flex-column">
-          <v-col cols="auto">
+          <v-col>
             <v-row class="d-flex justify-space-between">
-              <v-col cols="auto"><p>name.file - https://...</p></v-col>
-              <v-col cols="auto">
+              <v-col class="file-wrapper"><p>name.file</p> <p class="href">https://...44444444444444444444444444444444444443433333333333333333333333333333333333333333333333333333333333333333333333</p></v-col>
+              <v-col >
                 <v-btn
                   color="primary"
                   href="https://vuetifyjs.com/introduction/why-vuetify/#feature-guides"
@@ -174,12 +174,13 @@
             </v-row>
           </v-col>
 
-          <v-col cols="auto">
+          <v-col>
             <v-row class="d-flex justify-space-between">
-              <v-col cols="auto"><p>name.file - https://...</p></v-col>
-              <v-col cols="auto">
+              <v-col class="file-wrapper"><p>name.file</p> <p class="href">https://...</p></v-col>
+              <v-col >
                 <v-btn
                   color="primary"
+                  href="https://vuetifyjs.com/introduction/why-vuetify/#feature-guides"
                   min-width="120"
                   rel="noopener noreferrer"
                   size="small"
@@ -257,5 +258,19 @@ a {
 .aside {
   text-align: right;
   padding: 50px;
+}
+
+.href {
+  color: grey;
+  font-size: 12px;
+  /* width: max-content; */
+  overflow: visible;
+  word-wrap:break-word;
+  white-space:normal;
+}
+
+.file-wrapper {
+  text-align: left;
+  overflow: visible;
 }
 </style>

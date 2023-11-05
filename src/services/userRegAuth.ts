@@ -8,11 +8,12 @@ export async function register(data: IUserPayload ) {
 
 export async function auth(data: IUserPayload) {
   let auth: any = await socket.value.api('auth', data);
-  // if (auth.message == "Internal server error") {
-  //   console.log('Ошибка сервера')
-  // }
-  // localStorage.setItem('token', auth.session.token)
-  console.log(auth.message)
+  if (auth.message === "User is not found") {
+    alert('Неверные данные пользователя')
+  } else if(auth.message === "You are already logged in") {
+    alert('Пользователь уже авторизован')
+  }
+  localStorage.setItem('token', auth.session.token)
 }
 
 export async function autoAuth() {
