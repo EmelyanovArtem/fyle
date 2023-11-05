@@ -12,14 +12,17 @@ export class SocketBase {
   }
 
   async api(eventName: string, data: any = {}) {
-    const payload = data;
-    payload.id = Math.floor(Math.random() * 2**32);
+    const payload = { ...data, id: Math.floor(Math.random() * 2**32) };
     return new Promise((resolve, reject) => {
-      this.SOCKET.on(eventName, (payloadSocket) => {
-        if (payloadSocket.id === payload.id)
-          resolve(payloadSocket)
-      })
-      this.SOCKET.emit(eventName, payload ?? '');
-    })
+      const handler = (response: any) => {
+        if (response.id === payload.id) {
+          resolve(response);
+          this.SOCKET.off(eventName, handler);
+        }
+      };
+  
+      this.SOCKET.on(eventName, handler);
+      this.SOCKET.emit(eventName, payload);
+    });
   }
 }
