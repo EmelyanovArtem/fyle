@@ -14,6 +14,7 @@ import { createApp, ref } from 'vue'
 import { registerPlugins } from '@/plugins'
 import { SocketBase } from './services/socketService'
 import { guestRegAuth } from '@/services/guestRedAuth';
+import { autoAuth } from '@/services/userRegAuth';
 
 const app = createApp(App)
 
@@ -23,3 +24,4 @@ app.mount('#app')
 
 export const socket = ref(new SocketBase());
 guestRegAuth();
+autoAuth();

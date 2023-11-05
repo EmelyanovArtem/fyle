@@ -19,15 +19,15 @@
                 <v-card title="Вход">
                   <v-sheet width="300" class="mx-auto">
                     <v-form fast-fail @submit.prevent>
-                      <v-text-field
+                      <v-text-field v-model="userData.login"
                         label="Логин"
                       ></v-text-field>
 
-                      <v-text-field
+                      <v-text-field v-model="userData.password"
                         label="Пароль"
                       ></v-text-field>
 
-                      <v-btn @click="" type="submit" block class="mt-2">Войти</v-btn>
+                      <v-btn @click="auth(userData)" type="submit" block class="mt-2">Войти</v-btn>
                     </v-form>
                   </v-sheet>
 
@@ -51,15 +51,15 @@
                 <v-card title="Регистрация">
                   <v-sheet width="300" class="mx-auto">
                     <v-form fast-fail @submit.prevent>
-                      <v-text-field
+                      <v-text-field v-model="userData.login"
                         label="Логин"
                       ></v-text-field>
 
-                      <v-text-field
+                      <v-text-field v-model="userData.password"
                         label="Пароль"
                       ></v-text-field>
 
-                      <v-btn @click="" type="submit" block class="mt-2">Зарегистрироваться</v-btn>
+                      <v-btn @click="register(userData)" type="submit" block class="mt-2">Зарегистрироваться</v-btn>
                     </v-form>
                   </v-sheet>
 
@@ -205,30 +205,42 @@
 import { defineComponent } from 'vue';
 // import { io } from "socket.io-client";
 // import {guestRegister, guestAuth, auth} from '../sockets/socket';
+import { register } from "@/services/userRegAuth";
+import { auth } from "@/services/userRegAuth";
+import { IUserPayload } from '@/interfaces.dot';
 
 export default defineComponent({
   data() {
     return {
       currentToken: '' as string,
       aside: false as boolean,
+      userData: { } as IUserPayload
     }
   },
   created() {
-    let lsGuestToken = localStorage.getItem('guestToken');
-    let lsToken = localStorage.getItem('token');
+    // let lsGuestToken = localStorage.getItem('guestToken');
+    // let lsToken = localStorage.getItem('token');
 
-    if (lsToken !== null) {
-      console.log('1111111')
-      // auth(lsToken);
-    } else if(lsGuestToken === null) {
-      lsGuestToken = '';
-      // guestRegister();
-    }
-    else {
-      lsGuestToken = lsGuestToken as string;
-      // guestAuth(lsGuestToken);
-    }
+    // if (lsToken !== null) {
+    //   console.log('1111111')
+    //   // auth(lsToken);
+    // } else if(lsGuestToken === null) {
+    //   lsGuestToken = '';
+    //   // guestRegister();
+    // }
+    // else {
+    //   lsGuestToken = lsGuestToken as string;
+    //   // guestAuth(lsGuestToken);
+    // }
   },
+  methods: {
+    async register(userData: IUserPayload) {
+      await register(userData);
+    },
+    async auth(userData: IUserPayload) {
+      await auth(userData)
+    }
+  }
 })
 </script>
 
