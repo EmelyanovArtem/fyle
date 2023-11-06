@@ -85,7 +85,7 @@
         <template v-slot:activator="{ props }">
           <!-- <v-btn v-bind="props" text="Загрузить" class="mt-3"></v-btn> -->
           <v-btn
-          v-bind="props"
+            v-bind="props"
             color="primary"
             min-width="120"
             rel="noopener noreferrer"
@@ -107,10 +107,9 @@
                 <v-form fast-fail @submit.prevent>
                   <v-file-input
                     label="Выберите файл"
-                    accept=".pdf, .doc, .docx"
+                    v-model="selectedFile"
                   ></v-file-input>
-
-                  <v-btn @click="" type="submit" block class="mt-2">Загрузить</v-btn>
+                  <v-btn @click="socket.loadFile(selectedFile[0])" type="submit" block class="mt-2">Загрузить</v-btn>
                 </v-form>
               </v-sheet>
 
@@ -209,13 +208,17 @@ import { defineComponent } from 'vue';
 import { register } from "@/services/userRegAuth";
 import { auth } from "@/services/userRegAuth";
 import { IUserPayload } from '@/interfaces.dot';
+import { socket } from '@/main';
 
 export default defineComponent({
   data() {
     return {
       currentToken: '' as string,
       aside: false as boolean,
-      userData: { } as IUserPayload
+      userData: { } as IUserPayload,
+
+      selectedFile: null,
+      socket,
     }
   },
   created() {
