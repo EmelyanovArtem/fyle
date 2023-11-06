@@ -20,41 +20,11 @@ export class SocketBase {
     combinedArray.set(metainfo);
     combinedArray.set(fileData, metainfo.length);
 
-    this.SOCKET.emit(
+    this.SOCKET.volatile.emit(
       'uploadBlock', 
       combinedArray,
     );
 
-    function roughSizeOfObject(object: any) {
-      const objectList = [];
-      const stack = [object];
-      let bytes = 0;
-    
-      while (stack.length) {
-        const value = stack.pop();
-    
-        if (typeof value === 'boolean') {
-          bytes += 4;
-        } else if (typeof value === 'string') {
-          bytes += value.length * 2;
-        } else if (typeof value === 'number') {
-          bytes += 8;
-        } else if (
-          typeof value === 'object' && objectList.indexOf(value) === -1
-        ) {
-          objectList.push(value);
-    
-          for (let i in value) {
-            stack.push(value[i]);
-          }
-        }
-      }
-      return bytes;
-    }
-    
-    const myObj = this.SOCKET;
-    const size = roughSizeOfObject(myObj);
-    console.log('Размер объекта в байтах:', size);
     block = null;
     combinedArray = null;
     metainfo = null;
@@ -81,8 +51,6 @@ export class SocketBase {
 
       await this.uploadToServer(response, i, file, start, end);
       // await this.sleep(4);
-
-      
     }
   }
 
