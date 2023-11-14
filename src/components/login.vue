@@ -42,9 +42,9 @@
 </template>
 
 <script lang="ts">
+import { IUserPayload } from '@/interfaces.dto';
 import { defineComponent } from 'vue';
 // import { auth } from '../sockets/socket';
-import { IUserPayload } from '@/interfaces.dot';
 
 export default defineComponent({
   data() {

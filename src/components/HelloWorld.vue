@@ -259,12 +259,15 @@ import { register } from "@/services/userRegAuth";
 import { auth } from "@/services/userRegAuth";
 import { IUserPayload } from '@/interfaces.dto';
 import { socket } from '@/main';
+import { ref } from 'vue';
 
 export default defineComponent({
   data() {
+    const valid = ref(false);
+
     return {
-      currentToken: '' as string,
-      aside: false as boolean,
+      currentToken: '',
+      aside: false,
       userData: {} as IUserPayload,
 
       selectedFile: null,
@@ -272,13 +275,13 @@ export default defineComponent({
       loaderToggle: false,
       authToggle: false,
 
-      progressBar: 0 as number,
+      progressBar: 0,
 
-      valid: false as boolean,
+      valid,
       inputRules: [
         (value: string) => {
           if (value) {      
-            this.valid = true; 
+            valid.value = true; 
             return true
           }
           return 'This field is required'
@@ -286,7 +289,6 @@ export default defineComponent({
       ]
     }
   },
-
   methods: {
     async register(userData: IUserPayload) {
       if (this.valid) await register(userData); this.valid = false;
