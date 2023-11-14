@@ -4,73 +4,119 @@
       <h1>{{ currentToken }}</h1>
       <v-row class="d-flex align-center justify-space-around mb-16">
         <v-col cols="auto">
-          <router-link to="/" class="text-h6 font-weight-medium" href="#">Fyle</router-link>
         </v-col>
         <v-col cols="auto">
           <v-row>
-            <!-- <v-col><router-link to="/login" class="text-h6">Вход</router-link></v-col> -->
-            <!-- <v-col><router-link to="/register" class="text-h6">Регистрация</router-link></v-col> -->
-            <v-dialog width="500">
+            <h2 class="mt-5 mr-5 user-name"  v-if="authToggle">{{ userData.login }}</h2>
+            <v-btn @click="reloadPage()" 
+            variant="text"
+            color="white"
+            size="x-large"
+            v-if="authToggle" 
+            text="Logout" 
+            class="mt-3 text-none">
+          </v-btn>
+            <v-dialog v-if="!authToggle" width="500">
               <template v-slot:activator="{ props }">
-                <v-btn v-bind="props" text="Вход" class="mt-3 mr-5"></v-btn>
+                <v-btn size="x-large" variant="text" color="white"  v-bind="props" class="mt-3 text-none">Login</v-btn>
               </template>
-
               <template v-slot:default="{ isActive }">
-                <v-card title="Вход">
-                  <v-sheet width="300" class="mx-auto">
-                    <v-form fast-fail @submit.prevent>
-                      <v-text-field v-model="userData.login"
-                        label="Логин"
-                      ></v-text-field>
-
-                      <v-text-field v-model="userData.password"
-                        label="Пароль"
-                      ></v-text-field>
-
-                      <v-btn @click="auth(userData)" type="submit" block class="mt-2">Войти</v-btn>
-                    </v-form>
-                  </v-sheet>
-
+                <v-card>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-
                     <v-btn
-                      text="Закрыть"
                       @click="isActive.value = false"
-                    ></v-btn>
+                    >
+                    <v-icon icon="mdi-window-close"></v-icon>
+                  </v-btn>
                   </v-card-actions>
+                  <v-sheet width="300" class="mx-auto">
+                    <v-form fast-fail @submit.prevent>
+                      <v-text-field 
+                        color="primary" 
+                        bg-color="primary"  
+                        v-model="userData.login"
+                        label="Login"
+                        :rules="inputRules"
+                      ></v-text-field>
+                      <v-text-field 
+                        bg-color="primary" 
+                        v-model="userData.password"
+                        label="Password"
+                        :rules="inputRules"
+                      ></v-text-field>
+                      <v-btn @click="auth(userData)" 
+                        color="secondary" 
+                        type="submit" 
+                        block 
+                        size="x-large"
+                        class="mb-6 text-none">Enter
+                      </v-btn>
+                    </v-form>
+                  </v-sheet>
                 </v-card>
               </template>
             </v-dialog>
-            <v-dialog width="500">
+            <v-dialog v-if="!authToggle" width="500">
               <template v-slot:activator="{ props }">
-                <v-btn v-bind="props" text="Регистрация" class="mt-3"></v-btn>
+                <v-btn size="x-large" variant="text" color="white"  v-bind="props" class="mt-3 text-none">Registration</v-btn>
               </template>
-
               <template v-slot:default="{ isActive }">
-                <v-card title="Регистрация">
-                  <v-sheet width="300" class="mx-auto">
-                    <v-form fast-fail @submit.prevent>
-                      <v-text-field v-model="userData.login"
-                        label="Логин"
-                      ></v-text-field>
-
-                      <v-text-field v-model="userData.password"
-                        label="Пароль"
-                      ></v-text-field>
-
-                      <v-btn @click="register(userData)" type="submit" block class="mt-2">Зарегистрироваться</v-btn>
-                    </v-form>
-                  </v-sheet>
-
+                <v-card>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-
                     <v-btn
-                      text="Закрыть"
                       @click="isActive.value = false"
-                    ></v-btn>
+                    >
+                    <v-icon icon="mdi-window-close"></v-icon>
+                  </v-btn>
                   </v-card-actions>
+                  <v-sheet width="300" class="mx-auto">
+                    <v-form  fast-fail @submit.prevent>
+                      <v-text-field 
+                        color="primary" 
+                        bg-color="primary" 
+                        v-model="userData.login"
+                        label="Login"
+                        :rules="inputRules"
+                        required
+                      ></v-text-field>
+                      <v-text-field 
+                        bg-color="primary" 
+                        v-model="userData.password"
+                        label="Password"
+                        :rules="inputRules"
+                      ></v-text-field>
+                      <v-btn @click="register(userData)" 
+                        color="secondary" 
+                        type="submit" 
+                        block 
+                        size="x-large"
+                        class="mb-3 text-none">Enter
+                      </v-btn>
+                      <v-checkbox
+                      color="#20B5F1">
+                        <template v-slot:label>
+                          <p>
+                            Соглашаюсь с 
+                            <v-tooltip location="bottom">
+                              <template v-slot:activator="{ props }">
+                                <a
+                                  target="_blank"
+                                  href="https://vuetifyjs.com"
+                                  v-bind="props"
+                                  @click.stop
+                                >
+                                  условиями передачи данных
+                                </a>
+                              </template>
+                              Ознакомиться с условиями
+                            </v-tooltip>
+                          </p>
+                        </template>
+                      </v-checkbox>
+                    </v-form>
+                  </v-sheet>
                 </v-card>
               </template>
             </v-dialog>
@@ -80,53 +126,59 @@
 
       <v-img height="152" src="@/assets/logo.svg" class="mb-5 general-img" />
 
-      <div class="text-h6 font-weight-medium mb-5">Загрузка файлов форматов (...), не больше N мегабайт, хранятся N дней.</div>
-      <v-dialog width="500">
-        <template v-slot:activator="{ props }">
-          <!-- <v-btn v-bind="props" text="Загрузить" class="mt-3"></v-btn> -->
-          <v-btn
-            v-bind="props"
-            color="primary"
-            min-width="120"
-            rel="noopener noreferrer"
-            size="large"
-            target="_blank"
-            variant="flat"
-          >
-            Загрузить
-            <v-icon
-              icon="mdi-arrow-up-right"
-              size="large"
-            />
-          </v-btn>
-        </template>
-        
-        <template v-slot:default="{ isActive }">
-            <v-card title="Выбор файлов">
-              <v-sheet width="300" class="mx-auto">
-                <v-form fast-fail @submit.prevent>
-                  <v-file-input
-                    label="Выберите файл"
-                    v-model="selectedFile"
-                  ></v-file-input>
-                  <v-btn @click="socket.loadFile(selectedFile[0])" type="submit" block class="mt-2">Загрузить</v-btn>
-                </v-form>
-              </v-sheet>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-
-                <v-btn
-                  text="Закрыть"
-                  @click="isActive.value = false"
-                ></v-btn>
-              </v-card-actions>
-            </v-card>
-        </template>
-      </v-dialog>
+      <div class="text-wrapper">
+        <v-dialog width="500">
+          <template v-slot:activator="{ props }">
+            <v-btn
+              v-bind="props"
+              color="primary"
+              rel="noopener noreferrer"
+              class="text-none upload-btn mb-1"
+              rounded="xl"  
+              density="default"
+              size="x-large"
+            >
+              Upload file
+            </v-btn>
+          </template>          
+          <template v-slot:default="{ isActive }">
+              <v-card>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    @click="isActive.value = false"
+                  > <v-icon icon="mdi-window-close"></v-icon>
+                </v-btn>
+                </v-card-actions>
+                <v-sheet width="300" class="mx-auto">
+                  <v-form fast-fail @submit.prevent>                   
+                    <v-file-input
+                      label="Выберите файл"
+                      bg-color="primary"
+                      v-model="selectedFile"
+                    ></v-file-input>
+                    <v-btn @click="loadFile(selectedFile[0])" 
+                        color="secondary" 
+                        type="submit" 
+                        block 
+                        size="x-large"
+                        class="mb-6 text-none">Upload
+                    </v-btn>
+                  </v-form>
+                </v-sheet>
+                <div v-if="loaderToggle" class="loaderWrapper text-center">
+                  <span class="loader"></span>
+                  <p>{{ progressBar }}%</p>
+                </div>
+              </v-card>
+          </template>
+        </v-dialog>
+        <p class="font-weight-normal mb-5 desc">
+          Exchange files of any format and size.
+        </p>
+      </div>  
 
       <div class="py-14" />
-
       <v-btn
         @click="aside = !aside"
         color="primary"
@@ -135,7 +187,8 @@
         size="default"
         target="_blank"
         variant="flat"
-      > Показать все файлы
+        class="text-none"
+      > Show all files
       </v-btn>
       <v-navigation-drawer width="450" class="pt-16 aside" v-model="aside" app>
         <v-btn
@@ -172,7 +225,6 @@
               </v-col>
             </v-row>
           </v-col>
-
           <v-col>
             <v-row class="d-flex justify-space-between">
               <v-col class="file-wrapper"><p>name.file</p> <p class="href">https://...</p></v-col>
@@ -203,11 +255,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-// import { io } from "socket.io-client";
-// import {guestRegister, guestAuth, auth} from '../sockets/socket';
 import { register } from "@/services/userRegAuth";
 import { auth } from "@/services/userRegAuth";
-import { IUserPayload } from '@/interfaces.dot';
+import { IUserPayload } from '@/interfaces.dto';
 import { socket } from '@/main';
 
 export default defineComponent({
@@ -215,43 +265,91 @@ export default defineComponent({
     return {
       currentToken: '' as string,
       aside: false as boolean,
-      userData: { } as IUserPayload,
+      userData: {} as IUserPayload,
 
       selectedFile: null,
       socket,
+      loaderToggle: false,
+      authToggle: false,
+
+      progressBar: 0 as number,
+
+      valid: false as boolean,
+      inputRules: [
+        (value: string) => {
+          if (value) {      
+            this.valid = true; 
+            return true
+          }
+          return 'This field is required'
+        },
+      ]
     }
   },
-  created() {
-    // let lsGuestToken = localStorage.getItem('guestToken');
-    // let lsToken = localStorage.getItem('token');
 
-    // if (lsToken !== null) {
-    //   console.log('1111111')
-    //   // auth(lsToken);
-    // } else if(lsGuestToken === null) {
-    //   lsGuestToken = '';
-    //   // guestRegister();
-    // }
-    // else {
-    //   lsGuestToken = lsGuestToken as string;
-    //   // guestAuth(lsGuestToken);
-    // }
-  },
   methods: {
     async register(userData: IUserPayload) {
-      await register(userData);
+      if (this.valid) await register(userData); this.valid = false;
     },
+
     async auth(userData: IUserPayload) {
-      await auth(userData)
+      if (this.valid) {
+        await auth(userData)
+        this.authToggle = true;
+        this.valid = false;
+      }
+    },
+
+    // Загрузка файла, прогрессбар
+    async loadFile(fyle: File) {
+      await this.socket.loadFile(fyle);
+      this.loaderToggle = true;
+
+      let blocks = await this.socket.uploadBlock((uploadedBlocks) => {
+        this.progressBar = (100 / blocks) * uploadedBlocks ;
+
+        if (this.progressBar === 100) {
+          this.loaderToggle = false;
+          this.progressBar = 0;
+        }
+      });
+    },
+
+    reloadPage() {
+      window.location.reload();
     }
   }
 })
 </script>
 
 <style>
+*{
+  font-family:  Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn {
+  text-transform: lowercase;
+}
+
+.v-input__details > .v-icon, .v-input__prepend > .v-icon, .v-input__append > .v-icon {
+  color: #8D8888;
+}
+
+.user-name {
+  color: white ;
+}
+
+.upload-btn {
+  padding: 0 50px !important;
+  font-size: 24px !important;
+  font-weight: 600 !important;
+}
+
+p {
+  color: white;
+}
 a {
   color: white;
-  text-decoration: none;
 }
 
 .general-img {
@@ -266,7 +364,6 @@ a {
 .href {
   color: grey;
   font-size: 12px;
-  /* width: max-content; */
   overflow: visible;
   word-wrap:break-word;
   white-space:normal;
@@ -276,4 +373,35 @@ a {
   text-align: left;
   overflow: visible;
 }
+
+.text-wrapper {
+  width: 250px;
+  margin: 0 auto;
+}
+
+.desc {
+  text-align: left;
+  padding: 10px;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #D1D1D1;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  margin: 15px auto 0 auto;
+  }
+
+@keyframes rotation {
+0% {
+    transform: rotate(0deg);
+}
+100% {
+    transform: rotate(360deg);
+}
+} 
 </style>

@@ -2,6 +2,8 @@ import { Socket, io } from "socket.io-client";
 
 export class SocketBase {
   private SOCKET: Socket;
+  public countLoadedBlocks: number;
+  public countBlocks: number;
 
   constructor() {
     this.openSocket();
@@ -36,12 +38,25 @@ export class SocketBase {
   async loadFile(file: File) {
     const blockSize = 2 * 1024 * 1024;
     const blockCount = Math.ceil(file.size / blockSize);
+    this.countBlocks = blockCount;
 
-    const response: any = await this.api('registerFile', { 
-      filename: file.name, 
-      mimetype: file.type, 
-      totalSize: file.size 
-    });
+    let fileObj;
+
+    if(file.name.includes('.rar')) {
+      fileObj = {
+        filename: file.name, 
+        mimetype: "application/x-rar-compressed", 
+        totalSize: file.size,
+      }
+    } else {
+      fileObj = {
+        filename: file.name, 
+        mimetype: file.type, 
+        totalSize: file.size,
+      }
+    }
+
+    const response: any = await this.api('registerFile', fileObj); 
 
     if (!response.success) return;
 
@@ -52,6 +67,18 @@ export class SocketBase {
       await this.uploadToServer(response, i, file, start, end);
       // await this.sleep(4);
     }
+  }
+
+  async uploadBlock(callback: (countLoadedBlocks: number) => void) {
+    this.countLoadedBlocks = 0;
+    
+    this.SOCKET.off('uploadBlock');
+
+    this.SOCKET.on('uploadBlock', (data) => {
+      this.countLoadedBlocks++;
+      callback(this.countLoadedBlocks); // вызываем колбэк при изменении countBlocks
+    })
+    return this.countBlocks;
   }
 
   async api(eventName: string, data: any = {}) {
