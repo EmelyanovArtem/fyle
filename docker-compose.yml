@@ -13,11 +13,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik"
-      - "traefik.http.routers.fyle_backend.rule=Host(`${HOSTNAME}`)"
-      - "traefik.http.routers.fyle_backend.entrypoints=websecure"
-      - "traefik.http.routers.fyle_backend.tls.certresolver=letsEncrypt"
-      - "traefik.http.routers.fyle_backend.middlewares=traefik-compress"
-      - "traefik.http.services.fyle_backend.loadbalancer.server.port=${NGINX_PORT}"
+      - "traefik.http.routers.fyle_frontend.rule=Host(`${HOSTNAME}`)"
+      - "traefik.http.routers.fyle_frontend.entrypoints=websecure"
+      - "traefik.http.routers.fyle_frontend.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.fyle_frontend.middlewares=traefik-compress"
+      - "traefik.http.services.fyle_frontend.loadbalancer.server.port=${NGINX_PORT}"
 
 networks:
   traefik:
