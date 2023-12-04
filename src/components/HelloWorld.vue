@@ -16,7 +16,7 @@
             text="Logout" 
             class="mt-3 text-none">
           </v-btn>
-            <v-dialog v-if="!authToggle" width="500">
+          <v-dialog v-if="!authToggle" width="500">
               <template v-slot:activator="{ props }">
                 <v-btn size="x-large" variant="text" color="white"  v-bind="props" class="mt-3 text-none">Login</v-btn>
               </template>
@@ -31,28 +31,36 @@
                   </v-btn>
                   </v-card-actions>
                   <v-sheet width="300" class="mx-auto">
-                    <v-form fast-fail @submit.prevent>
+                    <v-form  fast-fail @submit.prevent>
                       <v-text-field 
-                        color="primary" 
-                        bg-color="primary"  
+                        class="inputs"
+                        color="white" 
+                        bg-color="inputs" 
                         v-model="userData.login"
                         label="Login"
+                        size=""
                         :rules="inputRules"
+                        required
                       ></v-text-field>
                       <v-text-field 
-                        bg-color="primary" 
+                      class="inputs"
+                        bg-color="inputs" 
                         v-model="userData.password"
                         label="Password"
+                        size=""
                         :rules="inputRules"
                       ></v-text-field>
-                      <v-btn @click="auth(userData)" 
+                      <v-btn @click="registerAuth(userData, auth)" 
+                        :disabled="checkRulesPasswordAuth"
                         color="secondary" 
                         type="submit" 
                         block 
-                        size="x-large"
-                        class="mb-6 text-none">Enter
+                        size="large"
+                        class="mb-3 text-none">Enter
                       </v-btn>
+                      <v-card-text class="text-center error">{{ errorMessage }}</v-card-text>
                     </v-form>
+                    
                   </v-sheet>
                 </v-card>
               </template>
@@ -74,28 +82,42 @@
                   <v-sheet width="300" class="mx-auto">
                     <v-form  fast-fail @submit.prevent>
                       <v-text-field 
-                        color="primary" 
-                        bg-color="primary" 
+                        class="inputs"
+                        color="white" 
+                        bg-color="inputs" 
                         v-model="userData.login"
                         label="Login"
+                        size=""
                         :rules="inputRules"
                         required
                       ></v-text-field>
                       <v-text-field 
-                        bg-color="primary" 
+                      class="inputs"
+                        bg-color="inputs" 
                         v-model="userData.password"
                         label="Password"
+                        size=""
                         :rules="inputRules"
                       ></v-text-field>
-                      <v-btn @click="register(userData)" 
+                      <v-text-field 
+                      class="inputs"
+                        bg-color="inputs" 
+                        v-model="repeatedPassword"
+                        label="Repeat password"
+                        size=""
+                        :rules="inputRules"
+                      ></v-text-field>
+                      <v-btn @click="registerAuth(userData, register)" 
+                        :disabled="checkRulesPasswordReg"
                         color="secondary" 
                         type="submit" 
                         block 
-                        size="x-large"
+                        size="large"
                         class="mb-3 text-none">Enter
                       </v-btn>
                       <v-checkbox
-                      color="#20B5F1">
+                      color="#20B5F1"
+                      v-model="rules">
                         <template v-slot:label>
                           <p>
                             Соглашаюсь с 
@@ -151,7 +173,7 @@
                 </v-btn>
                 </v-card-actions>
                 <v-sheet width="300" class="mx-auto">
-                  <v-form fast-fail @submit.prevent>                   
+                  <v-form align="center" class="pb-5" fast-fail @submit.prevent>                   
                     <v-file-input
                       label="Выберите файл"
                       bg-color="primary"
@@ -164,6 +186,7 @@
                         size="x-large"
                         class="mb-6 text-none">Upload
                     </v-btn>
+                    <v-icon v-if="succesToggle" size="x-large"  color="succes" icon="mdi-check-circle-outline"></v-icon>
                   </v-form>
                 </v-sheet>
                 <div v-if="loaderToggle" class="loaderWrapper text-center">
@@ -268,16 +291,26 @@ export default defineComponent({
     return {
       currentToken: '',
       aside: false,
-      userData: {} as IUserPayload,
+      userData: {
+        login: '',
+        password: '',
+      } as IUserPayload,
+      repeatedPassword: '' as string,
+      disabledBtn: true,
 
       selectedFile: null,
       socket,
       loaderToggle: false,
+      succesToggle: false,
       authToggle: false,
-
+      rules: false,
+ 
       progressBar: 0,
 
+      auth: auth,
+      register: register,
       valid,
+      errorMessage: '',
       inputRules: [
         (value: string) => {
           if (value) {      
@@ -289,36 +322,63 @@ export default defineComponent({
       ]
     }
   },
-  methods: {
-    async register(userData: IUserPayload) {
-      if (this.valid) await register(userData); this.valid = false;
+  computed: {
+    checkRulesPasswordReg() {
+      if (this.userData.password === this.repeatedPassword 
+      && this.rules 
+      &&(this.userData.password !== ''
+      || this.userData.login !== '')) {
+        return false
+      } else {
+        return true
+      }
     },
-
-    async auth(userData: IUserPayload) {
+    checkRulesPasswordAuth() {
+      if (this.userData.login !== "" && this.userData.password !== "") {
+        console.log(this.userData.login)
+        return false;
+      } else {
+        return true;
+      }
+    }
+  },
+  methods: {
+    async registerAuth(userData: IUserPayload, method: any) {
       if (this.valid) {
-        await auth(userData)
-        this.authToggle = true;
-        this.valid = false;
+         const responce: any = await method(userData); 
+
+         this.authToggle = responce.success; 
+         this.errorMessage = responce.message;
+
+         this.valid = false;
       }
     },
 
     // Загрузка файла, прогрессбар
     async loadFile(fyle: File) {
       await this.socket.loadFile(fyle);
+      this.succesToggle = false;
       this.loaderToggle = true;
 
       let blocks = await this.socket.uploadBlock((uploadedBlocks) => {
         this.progressBar = (100 / blocks) * uploadedBlocks ;
 
         if (this.progressBar === 100) {
+          this.succesToggle = true;
           this.loaderToggle = false;
           this.progressBar = 0;
-        }
+        } 
       });
     },
 
     reloadPage() {
       window.location.reload();
+    },
+
+    checkRulesPassword() {
+      if (this.userData.password === this.repeatedPassword && this.rules) {
+        this.disabledBtn = true;
+      }
     }
   }
 })
@@ -396,7 +456,15 @@ a {
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
   margin: 15px auto 0 auto;
-  }
+}
+
+.error {
+  color: #DE4444
+}
+
+.inputs {
+  padding: 0 !important;
+}
 
 @keyframes rotation {
 0% {

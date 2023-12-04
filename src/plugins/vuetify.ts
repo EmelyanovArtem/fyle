@@ -22,6 +22,9 @@ export default createVuetify({
           secondary: '#454444',
           surface: '#353434',
           error: '#DE4444',
+          inputs: '#2B2B2B',
+          disabled: '#565654',
+          succes: '#4BB543',
           // onBackground: '#8D8888'
         },
       },
