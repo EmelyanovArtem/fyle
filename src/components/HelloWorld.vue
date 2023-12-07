@@ -1,150 +1,6 @@
 <template>
   <v-container fluid class="">
     <v-responsive class="align-center text-center">
-      <h1>{{ currentToken }}</h1>
-      <v-row class="d-flex align-center justify-space-around mb-16">
-        <v-col cols="auto">
-        </v-col>
-        <v-col cols="auto">
-          <v-row>
-            <h2 class="mt-5 mr-5 user-name"  v-if="authToggle">{{ userData.login }}</h2>
-            <v-btn @click="reloadPage()" 
-            variant="text"
-            color="white"
-            size="x-large"
-            v-if="authToggle" 
-            text="Logout" 
-            class="mt-3 text-none">
-          </v-btn>
-          <v-dialog v-if="!authToggle" width="500">
-              <template v-slot:activator="{ props }">
-                <v-btn size="x-large" variant="text" color="white"  v-bind="props" class="mt-3 text-none">Login</v-btn>
-              </template>
-              <template v-slot:default="{ isActive }">
-                <v-card>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      @click="isActive.value = false"
-                    >
-                    <v-icon icon="mdi-window-close"></v-icon>
-                  </v-btn>
-                  </v-card-actions>
-                  <v-sheet width="300" class="mx-auto">
-                    <v-form  fast-fail @submit.prevent>
-                      <v-text-field 
-                        class="inputs"
-                        color="white" 
-                        bg-color="inputs" 
-                        v-model="userData.login"
-                        label="Login"
-                        size=""
-                        :rules="inputRules"
-                        required
-                      ></v-text-field>
-                      <v-text-field 
-                      class="inputs"
-                        bg-color="inputs" 
-                        v-model="userData.password"
-                        label="Password"
-                        size=""
-                        :rules="inputRules"
-                      ></v-text-field>
-                      <v-btn @click="registerAuth(userData, auth)" 
-                        :disabled="checkRulesPasswordAuth"
-                        color="secondary" 
-                        type="submit" 
-                        block 
-                        size="large"
-                        class="mb-3 text-none">Enter
-                      </v-btn>
-                      <v-card-text class="text-center error">{{ errorMessage }}</v-card-text>
-                    </v-form>
-                    
-                  </v-sheet>
-                </v-card>
-              </template>
-            </v-dialog>
-            <v-dialog v-if="!authToggle" width="500">
-              <template v-slot:activator="{ props }">
-                <v-btn size="x-large" variant="text" color="white"  v-bind="props" class="mt-3 text-none">Registration</v-btn>
-              </template>
-              <template v-slot:default="{ isActive }">
-                <v-card>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      @click="isActive.value = false"
-                    >
-                    <v-icon icon="mdi-window-close"></v-icon>
-                  </v-btn>
-                  </v-card-actions>
-                  <v-sheet width="300" class="mx-auto">
-                    <v-form  fast-fail @submit.prevent>
-                      <v-text-field 
-                        class="inputs"
-                        color="white" 
-                        bg-color="inputs" 
-                        v-model="userData.login"
-                        label="Login"
-                        size=""
-                        :rules="inputRules"
-                        required
-                      ></v-text-field>
-                      <v-text-field 
-                      class="inputs"
-                        bg-color="inputs" 
-                        v-model="userData.password"
-                        label="Password"
-                        size=""
-                        :rules="inputRules"
-                      ></v-text-field>
-                      <v-text-field 
-                      class="inputs"
-                        bg-color="inputs" 
-                        v-model="repeatedPassword"
-                        label="Repeat password"
-                        size=""
-                        :rules="inputRules"
-                      ></v-text-field>
-                      <v-btn @click="registerAuth(userData, register)" 
-                        :disabled="checkRulesPasswordReg"
-                        color="secondary" 
-                        type="submit" 
-                        block 
-                        size="large"
-                        class="mb-3 text-none">Enter
-                      </v-btn>
-                      <v-checkbox
-                      color="#20B5F1"
-                      v-model="rules">
-                        <template v-slot:label>
-                          <p>
-                            Соглашаюсь с 
-                            <v-tooltip location="bottom">
-                              <template v-slot:activator="{ props }">
-                                <a
-                                  target="_blank"
-                                  href="https://vuetifyjs.com"
-                                  v-bind="props"
-                                  @click.stop
-                                >
-                                  условиями передачи данных
-                                </a>
-                              </template>
-                              Ознакомиться с условиями
-                            </v-tooltip>
-                          </p>
-                        </template>
-                      </v-checkbox>
-                    </v-form>
-                  </v-sheet>
-                </v-card>
-              </template>
-            </v-dialog>
-          </v-row>
-        </v-col>
-      </v-row>
 
       <v-img height="152" src="@/assets/logo.svg" class="mb-5 general-img" />
 
@@ -278,82 +134,24 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { register } from "@/services/userRegAuth";
-import { auth } from "@/services/userRegAuth";
-import { IUserPayload } from '@/interfaces.dto';
 import { socket } from '@/main';
-import { ref } from 'vue';
 
 export default defineComponent({
   data() {
-    const valid = ref(false);
-
     return {
       currentToken: '',
       aside: false,
-      userData: {
-        login: '',
-        password: '',
-      } as IUserPayload,
-      repeatedPassword: '' as string,
-      disabledBtn: true,
 
       selectedFile: null,
       socket,
       loaderToggle: false,
       succesToggle: false,
-      authToggle: false,
-      rules: false,
- 
+
       progressBar: 0,
-
-      auth: auth,
-      register: register,
-      valid,
-      errorMessage: '',
-      inputRules: [
-        (value: string) => {
-          if (value) {      
-            valid.value = true; 
-            return true
-          }
-          return 'This field is required'
-        },
-      ]
     }
   },
-  computed: {
-    checkRulesPasswordReg() {
-      if (this.userData.password === this.repeatedPassword 
-      && this.rules 
-      &&(this.userData.password !== ''
-      || this.userData.login !== '')) {
-        return false
-      } else {
-        return true
-      }
-    },
-    checkRulesPasswordAuth() {
-      if (this.userData.login !== "" && this.userData.password !== "") {
-        console.log(this.userData.login)
-        return false;
-      } else {
-        return true;
-      }
-    }
-  },
+ 
   methods: {
-    async registerAuth(userData: IUserPayload, method: any) {
-      if (this.valid) {
-         const responce: any = await method(userData); 
-
-         this.authToggle = responce.success; 
-         this.errorMessage = responce.message;
-
-         this.valid = false;
-      }
-    },
-
     // Загрузка файла, прогрессбар
     async loadFile(fyle: File) {
       await this.socket.loadFile(fyle);
@@ -370,16 +168,6 @@ export default defineComponent({
         } 
       });
     },
-
-    reloadPage() {
-      window.location.reload();
-    },
-
-    checkRulesPassword() {
-      if (this.userData.password === this.repeatedPassword && this.rules) {
-        this.disabledBtn = true;
-      }
-    }
   }
 })
 </script>
@@ -456,14 +244,6 @@ a {
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
   margin: 15px auto 0 auto;
-}
-
-.error {
-  color: #DE4444
-}
-
-.inputs {
-  padding: 0 !important;
 }
 
 @keyframes rotation {
